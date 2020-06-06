@@ -10,14 +10,12 @@ ENV HOME=/root
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Add Chrome repo
+# Add google chrome repo
 RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && printf "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
-    # Configure apt and install packages
-    && apt-get update && apt-get install -y \
-    # Google Chrome
-    google-chrome-stable \
-    --no-install-recommends \
+    #
+    # Install google chrome
+    && apt-get update && apt-get -y install --no-install-recommends google-chrome-stable 2>&1 \
     #
     # Clean up
     && apt-get autoremove -y \
