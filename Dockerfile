@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.4
-FROM rubensa/ubuntu-tini-dev
+FROM rubensa/ubuntu-tini-dev:20.04
 LABEL author="Ruben Suarez <rubensa@gmail.com>"
 
 # Architecture component of TARGETPLATFORM (platform of the build result)
@@ -15,7 +15,7 @@ ENV HOME=/root
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Debian repo version used to install chromium (18.04-buster,20.04-bullseye,22.04-bookworm,24.04-trixie)
-ARG DEBIAN_VERSION=trixie
+ARG DEBIAN_VERSION=bullseye
 
 # Install Google Noto font family
 RUN <<EOT
