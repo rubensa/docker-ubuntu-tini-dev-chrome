@@ -21,4 +21,4 @@ docker run --rm -it \
   --name "ubuntu-tini-dev-chrome" \
   ${ENV_VARS} \
   ${RUNNER} \
-  rubensa/ubuntu-tini-dev-chrome "$@"
+  rubensa/ubuntu-tini-dev-chrome:20.04 "$@"
