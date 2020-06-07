@@ -1,4 +1,4 @@
-FROM rubensa/ubuntu-tini-dev
+FROM rubensa/ubuntu-tini-dev:18.04
 LABEL author="Ruben Suarez <rubensa@gmail.com>"
 
 # Architecture component of TARGETPLATFORM (platform of the build result)
@@ -14,7 +14,7 @@ ENV HOME=/root
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Debian repo version used to install chromium (18.04-buster,20.04-bullseye,22.04-bookworm)
-ARG DEBIAN_VERSION=bookworm
+ARG DEBIAN_VERSION=buster
 
 # Install Google Noto font family
 RUN echo "# Installing Google Noto font family..." \
