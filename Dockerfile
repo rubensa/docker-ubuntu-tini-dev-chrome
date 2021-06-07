@@ -15,7 +15,7 @@ RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - 
     && printf "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
     #
     # Install google chrome
-    && apt-get update && apt-get -y install --no-install-recommends libx11-xcb1 google-chrome-stable 2>&1 \
+    && apt-get update && apt-get -y install --no-install-recommends libx11-xcb1 pulseaudio-utils google-chrome-stable 2>&1 \
     #
     # Clean up
     && apt-get autoremove -y \
