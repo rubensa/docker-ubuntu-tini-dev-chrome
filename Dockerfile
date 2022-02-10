@@ -10,15 +10,22 @@ ENV HOME=/root
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Configure apt
+RUN apt-get update
+
+# Install chrome dependencies
+RUN apt-get -y install --no-install-recommends libx11-xcb1 pulseaudio-utils 2>&1
+
 # Add google chrome repo
 RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && printf "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
     #
     # Install google chrome
-    && apt-get update && apt-get -y install --no-install-recommends libx11-xcb1 pulseaudio-utils google-chrome-stable 2>&1 \
-    #
-    # Clean up
-    && apt-get autoremove -y \
+    && echo "# Installing chrome..." \
+    && apt-get update && apt-get -y install --no-install-recommends google-chrome-stable 2>&1
+
+# Clean up apt
+RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
