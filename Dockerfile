@@ -1,6 +1,9 @@
 FROM rubensa/ubuntu-tini-dev
 LABEL author="Ruben Suarez <rubensa@gmail.com>"
 
+# Architecture component of TARGETPLATFORM (platform of the build result)
+ARG TARGETARCH
+
 # Tell docker that all future commands should be run as root
 USER root
 
@@ -10,19 +13,35 @@ ENV HOME=/root
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Configure apt
-RUN apt-get update
+# Debian repo version used to install chromium (18.04-buster,20.04-bullseye,22.04-bookworm)
+ARG DEBIAN_VERSION=bookworm
 
-# Install chrome dependencies
-RUN apt-get -y install --no-install-recommends libx11-xcb1 pulseaudio-utils 2>&1
-
-# Add google chrome repo
-RUN curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && printf "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
-    #
-    # Install google chrome
-    && echo "# Installing chrome..." \
-    && apt-get update && apt-get -y install --no-install-recommends google-chrome-stable 2>&1
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        # Install chrome dependencies
+        apt-get update && apt-get -y install --no-install-recommends libx11-xcb1 pulseaudio-utils 2>&1 \
+        # Add google chrome repo
+        && curl -sSL https://dl.google.com/linux/linux_signing_key.pub | gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/google.gpg --import  \
+        && chmod a+r /etc/apt/trusted.gpg.d/google.gpg \
+        && printf "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+        # Install google chrome
+        && echo "# Installing chrome..." \
+        && apt-get update && apt-get -y install --no-install-recommends google-chrome-stable 2>&1; \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
+        # Add debian repo cause neither official arm64 chrome exists nor Ubuntu has deb package
+        # In case it's the first time that the user runs gpg and the directory /root/.gnupg/ doesn't exist yet
+        gpg -k \
+        && gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 \
+        && gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 \
+        && chmod a+r /etc/apt/trusted.gpg.d/debian.gpg \
+        && printf "deb http://http.us.debian.org/debian ${DEBIAN_VERSION} main contrib non-free" > /etc/apt/sources.list.d/debian.list \
+        # Configure apt to install chromium from debian repo
+        && printf "Package: chromium*\n\rPin: release a=${DEBIAN_VERSION}\n\rPin-Priority: 501\n\r\n\rPackage: *\n\rPin: release a=${DEBIAN_VERSION}\n\rPin-Priority: -10\n\r" >  /etc/apt/preferences.d/99debian-updates \
+        # Install chromium
+        && echo "# Installing chrome..." \
+        && apt-get update && apt-get -y install --no-install-recommends chromium 2>&1 \
+        # Make chromium look-like chrome
+        && ln -s /usr/bin/chromium /usr/bin/google-chrome; \
+    fi
 
 # Clean up apt
 RUN apt-get autoremove -y \
