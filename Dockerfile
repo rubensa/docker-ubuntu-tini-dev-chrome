@@ -20,9 +20,9 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
         # Install chrome dependencies
         apt-get update && apt-get -y install --no-install-recommends libx11-xcb1 pulseaudio-utils 2>&1 \
         # Add google chrome repo
-        && curl -sSL https://dl.google.com/linux/linux_signing_key.pub | gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/google.gpg --import  \
-        && chmod a+r /etc/apt/trusted.gpg.d/google.gpg \
-        && printf "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+        && mkdir -p /etc/apt/keyrings/ \
+        && curl -sSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google.gpg  \
+        && printf "deb [signed-by=/etc/apt/keyrings/google.gpg] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
         # Install google chrome
         && echo "# Installing chrome..." \
         && apt-get update && apt-get -y install --no-install-recommends google-chrome-stable 2>&1; \
