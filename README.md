@@ -110,7 +110,7 @@ docker run --rm -it \
 
 *NOTE*: Mounting /var/run/docker.sock allows host docker usage inside the container (docker-from-docker).
 
-This way, the internal user UID an group GID are changed to the current host user:group launching the container and the existing files under his internal HOME directory that where owned by user and group are also updated to belong to the new UID:GID.
+This way, the internal user UID and group GID are changed to the current host user:group launching the container and the existing files under his internal HOME directory that where owned by user and group are also updated to belong to the new UID:GID.
 
 Functions prepare_docker_sound_host_sharing, prepare_docker_webcam_host_sharing, prepare_docker_ipc_host_sharing, prepare_docker_x11_host_sharing and prepare_chrome_seccomp allows chrome to access your host resources.
 
@@ -130,7 +130,7 @@ This creates a bash shell run by the internal user.
 
 Once connected...
 
-You can check installed develpment software:
+You can check installed development software:
 
 ```
 gcc --version
