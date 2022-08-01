@@ -18,7 +18,7 @@ ARG DEBIAN_VERSION=bookworm
 
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
         # Install chrome dependencies
-        apt-get update && apt-get -y install --no-install-recommends libx11-xcb1 pulseaudio-utils 2>&1 \
+        apt-get update && apt-get -y install --no-install-recommends libgl1-mesa-glx libgl1-mesa-dri libx11-xcb1 pulseaudio-utils 2>&1 \
         # Add google chrome repo
         && mkdir -p /etc/apt/keyrings/ \
         && curl -sSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google.gpg  \
