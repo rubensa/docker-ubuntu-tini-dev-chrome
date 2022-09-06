@@ -17,36 +17,36 @@ ENV DEBIAN_FRONTEND=noninteractive
 ARG DEBIAN_VERSION=bookworm
 
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
-        # Install chrome dependencies
-        apt-get update && apt-get -y install --no-install-recommends libgl1-mesa-glx libgl1-mesa-dri libx11-xcb1 pulseaudio-utils 2>&1 \
-        # Add google chrome repo
-        && mkdir -p /etc/apt/keyrings/ \
-        && curl -sSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google.gpg  \
-        && printf "deb [signed-by=/etc/apt/keyrings/google.gpg] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
-        # Install google chrome
-        && echo "# Installing chrome..." \
-        && apt-get update && apt-get -y install --no-install-recommends google-chrome-stable 2>&1; \
-    elif [ "$TARGETARCH" = "arm64" ]; then \
-        # Add debian repo cause neither official arm64 chrome exists nor Ubuntu has deb package
-        # In case it's the first time that the user runs gpg and the directory /root/.gnupg/ doesn't exist yet
-        gpg -k \
-        && gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 \
-        && gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 \
-        && chmod a+r /etc/apt/trusted.gpg.d/debian.gpg \
-        && printf "deb http://http.us.debian.org/debian ${DEBIAN_VERSION} main contrib non-free" > /etc/apt/sources.list.d/debian.list \
-        # Configure apt to install chromium from debian repo
-        && printf "Package: chromium*\n\rPin: release a=${DEBIAN_VERSION}\n\rPin-Priority: 501\n\r\n\rPackage: *\n\rPin: release a=${DEBIAN_VERSION}\n\rPin-Priority: -10\n\r" >  /etc/apt/preferences.d/99debian-updates \
-        # Install chromium
-        && echo "# Installing chrome..." \
-        && apt-get update && apt-get -y install --no-install-recommends chromium 2>&1 \
-        # Make chromium look-like chrome
-        && ln -s /usr/bin/chromium /usr/bin/google-chrome; \
-    fi
+  # Install chrome dependencies
+  apt-get update && apt-get -y install --no-install-recommends libgl1-mesa-glx libgl1-mesa-dri libx11-xcb1 pulseaudio-utils 2>&1 \
+  # Add google chrome repo
+  && mkdir -p /etc/apt/keyrings/ \
+  && curl -sSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google.gpg  \
+  && printf "deb [signed-by=/etc/apt/keyrings/google.gpg] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+  # Install google chrome
+  && echo "# Installing chrome..." \
+  && apt-get update && apt-get -y install --no-install-recommends google-chrome-stable 2>&1; \
+  elif [ "$TARGETARCH" = "arm64" ]; then \
+  # Add debian repo cause neither official arm64 chrome exists nor Ubuntu has deb package
+  # In case it's the first time that the user runs gpg and the directory /root/.gnupg/ doesn't exist yet
+  gpg -k \
+  && gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 \
+  && gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 \
+  && chmod a+r /etc/apt/trusted.gpg.d/debian.gpg \
+  && printf "deb http://http.us.debian.org/debian ${DEBIAN_VERSION} main contrib non-free" > /etc/apt/sources.list.d/debian.list \
+  # Configure apt to install chromium from debian repo
+  && printf "Package: chromium*\n\rPin: release a=${DEBIAN_VERSION}\n\rPin-Priority: 501\n\r\n\rPackage: *\n\rPin: release a=${DEBIAN_VERSION}\n\rPin-Priority: -10\n\r" >  /etc/apt/preferences.d/99debian-updates \
+  # Install chromium
+  && echo "# Installing chrome..." \
+  && apt-get update && apt-get -y install --no-install-recommends chromium 2>&1 \
+  # Make chromium look-like chrome
+  && ln -s /usr/bin/chromium /usr/bin/google-chrome; \
+  fi
 
 # Clean up apt
 RUN apt-get autoremove -y \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*
+  && apt-get clean -y \
+  && rm -rf /var/lib/apt/lists/*
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=

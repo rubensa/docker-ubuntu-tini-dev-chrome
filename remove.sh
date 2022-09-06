@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-chrome"
+
 docker rm \
-  ubuntu-tini-dev-chrome
+  "${DOCKER_IMAGE_NAME}"

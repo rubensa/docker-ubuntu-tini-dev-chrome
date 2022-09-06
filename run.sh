@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+DOCKER_REPOSITORY_NAME="rubensa"
+DOCKER_IMAGE_NAME="ubuntu-tini-dev-chrome"
+DOCKER_IMAGE_TAG="latest"
+
 # Get current user UID
 USER_ID=$(id -u)
 # Get current user main GUID
@@ -71,7 +75,7 @@ prepare_docker_x11_host_sharing
 prepare_chrome_seccomp
 
 docker run --rm -it \
-  --name "ubuntu-tini-dev-chrome" \
+  --name "${DOCKER_IMAGE_NAME}" \
   ${SECURITY} \
   ${ENV_VARS} \
   ${DEVICES} \
@@ -79,4 +83,4 @@ docker run --rm -it \
   ${EXTRA} \
   ${RUNNER} \
   ${RUNNER_GROUPS} \
-  rubensa/ubuntu-tini-dev-chrome "$@"
+   "${DOCKER_REPOSITORY_NAME}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}" "$@"
