@@ -16,9 +16,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Debian repo version used to install chromium (18.04-buster,20.04-bullseye,22.04-bookworm)
 ARG DEBIAN_VERSION=bookworm
 
+# Install Google Noto font family
+RUN echo "# Installing Google Noto font family..." \
+  && apt-get update && apt-get -y install fonts-noto 2>&1
+
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
+  echo "# Installing chrome dependencies..." \
   # Install chrome dependencies
-  apt-get update && apt-get -y install --no-install-recommends libgl1-mesa-glx libgl1-mesa-dri libx11-xcb1 pulseaudio-utils 2>&1 \
+  && apt-get -y install --no-install-recommends libgl1-mesa-glx libgl1-mesa-dri libx11-xcb1 pulseaudio-utils 2>&1 \
   # Add google chrome repo
   && mkdir -p /etc/apt/keyrings/ \
   && curl -sSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google.gpg  \
