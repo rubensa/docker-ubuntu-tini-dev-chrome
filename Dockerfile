@@ -43,7 +43,8 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
   && printf "Package: chromium*\n\rPin: release a=${DEBIAN_VERSION}\n\rPin-Priority: 501\n\r\n\rPackage: *\n\rPin: release a=${DEBIAN_VERSION}\n\rPin-Priority: -10\n\r" >  /etc/apt/preferences.d/99debian-updates \
   # Install chromium
   && echo "# Installing chrome..." \
-  && apt-get update && apt-get -y install --no-install-recommends chromium 2>&1 \
+  # Use --force-overwrite to avoid error (libc6-dev:arm64 (2.36-6)): trying to overwrite '/usr/lib/aarch64-linux-gnu/audit/sotruss-lib.so', which is also in package libc6:arm64 2.35-0ubuntu3.1
+  && apt-get update && apt-get -y install --no-install-recommends -o Dpkg::Options::="--force-overwrite" chromium 2>&1 \
   # Make chromium look-like chrome
   && ln -s /usr/bin/chromium /usr/bin/google-chrome; \
   fi
