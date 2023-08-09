@@ -35,6 +35,9 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
   # Add debian repo cause neither official arm64 chrome exists nor Ubuntu has deb package
   # In case it's the first time that the user runs gpg and the directory /root/.gnupg/ doesn't exist yet
   gpg -k \
+  # Fix: "gpg: keyserver receive failed: Cannot assign requested address"
+  # see: https://github.com/usbarmory/usbarmory-debian-base_image/issues/9#issuecomment-451635505
+  && echo "disable-ipv6" >> /root/.gnupg/dirmngr.conf \
   && gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138 \
   && gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9 \
   && chmod a+r /etc/apt/trusted.gpg.d/debian.gpg \
