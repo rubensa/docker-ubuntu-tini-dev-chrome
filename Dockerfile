@@ -54,7 +54,9 @@ elif [ "$TARGETARCH" = "arm64" ]; then
   gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys F8D2585B8783D481
   gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 762F67A0B2C39DE4
   chmod a+r /etc/apt/trusted.gpg.d/debian.gpg
-  printf "deb http://http.us.debian.org/debian ${DEBIAN_VERSION} main contrib non-free" > /etc/apt/sources.list.d/debian.list
+  # Fix: "The repository 'http://http.us.debian.org/debian buster Release' does not have a Release file."
+  # Buster repositories were removed from the main mirrors, so we need to switch to archive.debian.org
+  printf "deb http://archive.debian.org/debian ${DEBIAN_VERSION} main contrib non-free" > /etc/apt/sources.list.d/debian.list
   # Configure apt to install chromium from debian repo
   printf "Package: chromium*\n\rPin: release a=${DEBIAN_VERSION}\n\rPin-Priority: 501\n\r\n\rPackage: *\n\rPin: release a=${DEBIAN_VERSION}\n\rPin-Priority: -10\n\r" >  /etc/apt/preferences.d/99debian-updates
   # Install chromium
