@@ -47,6 +47,12 @@ elif [ "$TARGETARCH" = "arm64" ]; then
   echo "disable-ipv6" >> /root/.gnupg/dirmngr.conf
   gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 648ACFD622F3D138
   gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
+  # Fix: "GPG error: http://http.us.debian.org/debian bookworm InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6ED0E7B82643E131 NO_PUBKEY 78DBA3BC47EF2265 NO_PUBKEY F8D2585B8783D481"
+  # Fix: "GPG error: http://http.us.debian.org/debian trixie InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 6ED0E7B82643E131 NO_PUBKEY 78DBA3BC47EF2265 NO_PUBKEY 762F67A0B2C39DE4"
+  gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 6ED0E7B82643E131
+  gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 78DBA3BC47EF2265
+  gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys F8D2585B8783D481
+  gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/debian.gpg --keyserver keyserver.ubuntu.com --recv-keys 762F67A0B2C39DE4
   chmod a+r /etc/apt/trusted.gpg.d/debian.gpg
   printf "deb http://http.us.debian.org/debian ${DEBIAN_VERSION} main contrib non-free" > /etc/apt/sources.list.d/debian.list
   # Configure apt to install chromium from debian repo
